@@ -1,29 +1,102 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>البحث في القرآن بالصوت</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <title>عاهدتُ القرآن</title>
+    <style>
+        body {
+            font-family: 'Amiri', serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #002b4d, #004c6d);
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        p {
+            font-size: 18px;
+        }
+        .progress-container {
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 20px;
+            background: gold;
+            transition: width 0.5s;
+        }
+        button {
+            background: gold;
+            color: black;
+            font-size: 18px;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: orange;
+        }
+    </style>
 </head>
 <body>
+
     <div class="container">
-        <header>
-            <h1><i class="fas fa-quran"></i> الباحث القرآني الذكي</h1>
-            <p>ابحث عن أي آية بالصوت أو النص</p>
-        </header>
-
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="اكتب أو انقر على الميكروفون">
-            <button id="micButton"><i class="fas fa-microphone"></i></button>
-            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        <h1>📖 عاهدتُ القرآن 📖</h1>
+        <p id="motivational-text">حافظ على وِردك اليومي، فالقرآن يشفع لأهله يوم القيامة.</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
         </div>
-
-        <div id="loader"><div class="spinner"></div></div>
-        <div id="results"></div>
+        <p>تقدمك في الختم: <span id="progress-text">0%</span></p>
+        <button onclick="increaseProgress()">📖 قراءة المزيد</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const messages = [
+            "اقرأ ولو آية، فالقرآن حياة للقلب. ❤️",
+            "اجعل لنفسك موعدًا يوميًا مع القرآن الكريم. ☘️",
+            "خيركم من تعلم القرآن وعلمه. 🌿",
+            "لا تهجر كتاب الله، فهو النور في طريقك. ✨",
+            "هل قرأت وردك اليوم؟ لا تؤجل، فالعمر يمضي. ⏳"
+        ];
+
+        function updateMotivation() {
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById("motivational-text").innerText = message;
+        }
+
+        function increaseProgress() {
+            let progress = localStorage.getItem("quranProgress") || 0;
+            progress = Math.min(100, parseInt(progress) + 10);
+            localStorage.setItem("quranProgress", progress);
+            updateProgressBar(progress);
+        }
+
+        function updateProgressBar(progress) {
+            document.getElementById("progress-bar").style.width = progress + "%";
+            document.getElementById("progress-text").innerText = progress + "%";
+        }
+
+        // عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedProgress = localStorage.getItem("quranProgress") || 0;
+            updateProgressBar(savedProgress);
+            updateMotivation();
+        });
+    </script>
+
 </body>
 </html>
