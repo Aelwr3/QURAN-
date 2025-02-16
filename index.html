@@ -1,102 +1,219 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عاهدتُ القرآن</title>
+    <title>عاهدتُ القرآن - المنصة الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        /* CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Amiri', serif;
-            text-align: center;
-            background: linear-gradient(to bottom, #002b4d, #004c6d);
-            color: white;
-            padding: 20px;
         }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #4fc3f7 100%);
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            50% { transform: translateY(-100px) scale(1); opacity: 0.3; }
+            100% { transform: translateY(-200px) scale(0); opacity: 0; }
+        }
+
+        .title-frame {
+            background: linear-gradient(45deg, #fff 0%, #e3f2fd 50%, #fff9c4 100%);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin: 2rem auto;
+            width: fit-content;
+            animation: frameGlow 3s infinite alternate;
+            position: relative;
+        }
+
+        @keyframes frameGlow {
+            0% { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+            100% { box-shadow: 0 0 30px rgba(255,223,0,0.5); }
+        }
+
         h1 {
-            font-size: 24px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #1a237e, #4fc3f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
         }
-        p {
-            font-size: 18px;
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
         }
-        .progress-container {
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 20px;
+
+        .progress-circle {
+            position: relative;
+            width: 140px;
+            height: 140px;
         }
-        .progress-bar {
-            width: 0%;
-            height: 20px;
-            background: gold;
-            transition: width 0.5s;
+
+        .progress-circle svg {
+            transform: rotate(-90deg);
         }
-        button {
-            background: gold;
-            color: black;
-            font-size: 18px;
+
+        .progress-circle circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .progress-circle circle:first-child {
+            stroke: rgba(255,255,255,0.2);
+        }
+
+        .progress-circle circle.progress {
+            stroke: #fff9c4;
+            stroke-dasharray: 408;
+            stroke-dashoffset: calc(408 - (408 * var(--progress)) / 100);
+            animation: progress 1s ease-out;
+        }
+
+        @keyframes progress {
+            from { stroke-dashoffset: 408; }
+        }
+
+        .start-button {
+            background: linear-gradient(45deg, #1a237e, #4fc3f7);
+            color: white;
+            padding: 1rem 2rem;
             border: none;
-            padding: 10px 20px;
-            margin-top: 20px;
+            border-radius: 25px;
+            font-size: 1.2rem;
             cursor: pointer;
-            border-radius: 5px;
+            transition: transform 0.3s;
+            display: block;
+            margin: 1rem auto;
         }
-        button:hover {
-            background: orange;
+
+        .start-button:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <h1>📖 عاهدتُ القرآن 📖</h1>
-        <p id="motivational-text">حافظ على وِردك اليومي، فالقرآن يشفع لأهله يوم القيامة.</p>
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        <p>تقدمك في الختم: <span id="progress-text">0%</span></p>
-        <button onclick="increaseProgress()">📖 قراءة المزيد</button>
+    <!-- HTML -->
+    <div class="animated-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
     </div>
 
+    <div class="title-frame">
+        <h1>عاهدتُ القرآن</h1>
+        <p class="description">منصة ذكية للتدبر القرآني الممنهج</p>
+    </div>
+
+    <div class="stats-container">
+        <div class="progress-circle">
+            <svg>
+                <circle cx="70" cy="70" r="65"/>
+                <circle cx="70" cy="70" r="65" class="progress"/>
+            </svg>
+            <div class="progress-text">
+                <span id="progressPercent">0%</span>
+                <small>إنجاز الخطة</small>
+            </div>
+        </div>
+    </div>
+
+    <button class="start-button" onclick="startReading()">
+        ابدأ التلاوة 🕋
+        <span>الصفحات المتبقية اليوم: <span id="remainingPages">5</span></span>
+    </button>
+
     <script>
-        const messages = [
-            "اقرأ ولو آية، فالقرآن حياة للقلب. ❤️",
-            "اجعل لنفسك موعدًا يوميًا مع القرآن الكريم. ☘️",
-            "خيركم من تعلم القرآن وعلمه. 🌿",
-            "لا تهجر كتاب الله، فهو النور في طريقك. ✨",
-            "هل قرأت وردك اليوم؟ لا تؤجل، فالعمر يمضي. ⏳"
+        // JavaScript
+        const motivationalMessages = [
+            "اقرأوا القرآن فإنه يأتي يوم القيامة شفيعًا لأصحابه",
+            "خيركم من تعلم القرآن وعلمه",
+            "إن الله يرفع بهذا الكتاب أقواماً ويضع به آخرين",
+            // ... أضف 30 رسالة هنا
         ];
 
-        function updateMotivation() {
-            const message = messages[Math.floor(Math.random() * messages.length)];
-            document.getElementById("motivational-text").innerText = message;
+        let currentPlan = {
+            duration: 30,
+            totalPages: 604,
+            dailyPages: 20,
+            currentProgress: 0,
+            sessions: []
+        };
+
+        function createParticles() {
+            const container = document.querySelector('.animated-bg');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.width = particle.style.height = `${Math.random() * 20 + 5}px`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                container.appendChild(particle);
+            }
         }
 
-        function increaseProgress() {
-            let progress = localStorage.getItem("quranProgress") || 0;
-            progress = Math.min(100, parseInt(progress) + 10);
-            localStorage.setItem("quranProgress", progress);
-            updateProgressBar(progress);
+        function updateProgress() {
+            const progress = (currentPlan.currentProgress / currentPlan.totalPages) * 100;
+            document.documentElement.style.setProperty('--progress', progress);
+            document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
         }
 
-        function updateProgressBar(progress) {
-            document.getElementById("progress-bar").style.width = progress + "%";
-            document.getElementById("progress-text").innerText = progress + "%";
+        function startReading() {
+            const session = {
+                startTime: new Date(),
+                targetPages: calculateSmartSession(),
+                completedPages: 0
+            };
+
+            localStorage.setItem('currentSession', JSON.stringify(session));
+            window.location.href = 'reading.html';
         }
 
-        // عند تحميل الصفحة
-        document.addEventListener("DOMContentLoaded", function () {
-            const savedProgress = localStorage.getItem("quranProgress") || 0;
-            updateProgressBar(savedProgress);
-            updateMotivation();
+        function calculateSmartSession() {
+            const remaining = currentPlan.dailyPages - currentPlan.currentProgress;
+            return Math.min(remaining, Math.ceil(remaining / 3));
+        }
+
+        // تهيئة أولية
+        window.onload = () => {
+            createParticles();
+            updateProgress();
+            setInterval(() => {
+                document.querySelector('.motivation-message').textContent = 
+                    motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+            }, 5000);
+        };
+
+        // حماية من الهروب السريع
+        window.addEventListener('beforeunload', (e) => {
+            if (localStorage.getItem('currentSession')) {
+                e.preventDefault();
+                e.returnValue = 'هل تريد حقًا مغادرة الجلسة؟ سيتم فقدان التقدم الحالي.';
+            }
         });
     </script>
-
 </body>
 </html>
