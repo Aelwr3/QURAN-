@@ -397,6 +397,215 @@
     <script>
         // إنشاء الجسيمات الديناميكية
         function createParticles() {
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عاهد القرآن - المنصة الذكية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* الأساسيات */
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #4fc3f7;
+            --gold-color: #FFD700;
+            --text-color: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Amiri', serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), #0d47a1);
+            min-height: 100vh;
+            color: var(--text-color);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* الخلفية المتحركة */
+        .particles-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            animation: float 18s infinite linear;
+            filter: blur(2px);
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(0); opacity: 0; }
+            20% { transform: translate(100px, -50px) scale(0.8); opacity: 0.4; }
+            40% { transform: translate(-80px, -120px) scale(1.2); opacity: 0.6; }
+            60% { transform: translate(150px, -200px) scale(0.6); opacity: 0.3; }
+            80% { transform: translate(-100px, -250px) scale(1); opacity: 0.5; }
+            100% { transform: translate(0, -300px) scale(0); opacity: 0; }
+        }
+
+        /* الهيدر */
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .title-container {
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0.1), 
+                rgba(79,195,247,0.2), 
+                rgba(255,215,0,0.1));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem 3rem;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin: 1rem auto;
+            transition: transform 0.3s;
+        }
+
+        .title-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, var(--text-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 0.8rem;
+        }
+
+        /* إحصائيات المستخدم */
+        .stats-section {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-3px);
+        }
+
+        .progress-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .progress-circle {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-circle circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .progress-background {
+            stroke: rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            stroke: var(--gold-color);
+            stroke-dasharray: 628;
+            stroke-dashoffset: calc(628 - (628 * var(--progress)) / 100);
+            animation: progress-animation 1.5s ease-out;
+            filter: drop-shadow(0 0 5px var(--gold-color));
+        }
+
+        @keyframes progress-animation {
+            from { stroke-dashoffset: 628; }
+        }
+
+        /* بقية التنسيقات... */
+    </style>
+</head>
+<body>
+    <!-- الجسيمات المتحركة -->
+    <div class="particles-container" id="particles"></div>
+
+    <!-- الهيدر -->
+    <header class="header">
+        <div class="title-container">
+            <h1>عاهد القرآن الكريم</h1>
+            <p class="description">منصة ذكية تجمع بين التقنية والتدبر القرآني</p>
+        </div>
+    </header>
+
+    <!-- قسم الإحصائيات -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <!-- دائرة التقدم -->
+            <div class="stat-card">
+                <div class="progress-container">
+                    <svg class="progress-circle">
+                        <circle class="progress-background" cx="100" cy="100" r="95"/>
+                        <circle class="progress-bar" cx="100" cy="100" r="95"/>
+                    </svg>
+                    <div class="progress-text">
+                        <span class="percentage">25%</span>
+                        <span class="label">إنجاز الخطة</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الإحصائيات الجانبية -->
+            <div class="stat-card">
+                <h3>🗓 الأيام المتبقية</h3>
+                <p class="stat-value">27 يومًا</p>
+                <div class="progress-bar-container">
+                    <div class="time-progress"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // إنشاء الجسيمات الديناميكية
+        function createParticles() {
             const container = document.getElementById('particles');
             for (let i = 0; i < 25; i++) {
                 const particle = document.createElement('div');
