@@ -1,0 +1,42 @@
+{
+  "quran": [
+    {
+      "surah_number": 1,
+      "surah_name": "الفاتحة",
+      "pages": [
+        {
+          "page_number": 1,
+          "verses": [
+            {
+              "verse_number": 1,
+              "text": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+            },
+            {
+              "verse_number": 2,
+              "text": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "surah_number": 2,
+      "surah_name": "البقرة",
+      "pages": [
+        {
+          "page_number": 2,
+          "verses": [
+            {
+              "verse_number": 1,
+              "text": "الم"
+            },
+            {
+              "verse_number": 2,
+              "text": "ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
