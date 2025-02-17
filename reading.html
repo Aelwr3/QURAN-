@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التلاوة - عاهدتُ القرآن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #1a237e;
+            --gold: #FFD700;
+            --text-primary: #E1F5FE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Amiri', serif;
+        }
+
+        body {
+            background: var(--dark-blue);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+            background: var(--gold);
+            color: var(--dark-blue);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .quran-page {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            line-height: 2.5;
+            font-size: 1.5rem;
+            text-align: justify;
+        }
+
+        .controls {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background: var(--gold);
+            color: var(--dark-blue);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            flex: 1;
+            transition: 0.3s;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .timer {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .alert {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" onclick="window.location.href='index.html'">← العودة</button>
+            <h2>الصفحة <span id="currentPage">1</span></h2>
+        </div>
+
+        <div class="timer">
+            وقت التدبر: <span id="timeSpent">00:00</span> / الحد الأدنى: <span id="minTime">03:00</span>
+        </div>
+
+        <div class="quran-page" id="quranText">
+            جاري تحميل النص...
+        </div>
+
+        <div class="alert" id="alertMessage">
+            !الرجاء قضاء الوقت الكافي للتدبر
+        </div>
+
+        <div class="controls">
+            <button class="nav-button" id="prevBtn" onclick="navigate(-1)">السابق</button>
+            <button class="nav-button" id="nextBtn" onclick="navigate(1)">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let startTime = Date.now();
+        let timerInterval;
+        const MIN_TIME_PER_PAGE = 180; // 3 دقائق بالثواني
+
+        // تحميل بيانات القرآن
+        async function loadQuran() {
+            try {
+                const response = await fetch('quran.json');
+                const data = await response.json();
+                return data.quran;
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+            }
+        }
+
+        // عرض الصفحة الحالية
+        async function displayPage(pageNumber) {
+            const quranData = await loadQuran();
+            const pageContent = quranData
+                .flatMap(surah => surah.pages)
+                .find(page => page.page_number === pageNumber);
+
+            if (pageContent) {
+                const versesText = pageContent.verses.map(v => v.text).join(' ');
+                document.getElementById('quranText').innerHTML = versesText;
+                document.getElementById('currentPage').textContent = pageNumber;
+                updateNavigationButtons(pageNumber);
+                startTimer();
+                saveProgress(pageNumber);
+            }
+        }
+
+        // إدارة المؤقت
+        function startTimer() {
+            startTime = Date.now();
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('timeSpent').textContent = 
+                    `${Math.floor(elapsed / 60).toString().padStart(2, '0')}:${(elapsed % 60).toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // التحقق من الوقت المنقضي
+        function validateTime() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            return elapsed >= MIN_TIME_PER_PAGE;
+        }
+
+        // التنقل بين الصفحات
+        function navigate(direction) {
+            if (direction === 1 && !validateTime()) {
+                document.getElementById('alertMessage').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('alertMessage').style.display = 'none';
+            currentPage += direction;
+            displayPage(currentPage);
+        }
+
+        // تحديث أزرار التنقل
+        function updateNavigationButtons(page) {
+            document.getElementById('prevBtn').disabled = page === 1;
+            document.getElementById('nextBtn').disabled = page === 604;
+        }
+
+        // حفظ التقدم
+        function saveProgress(page) {
+            localStorage.setItem('quranProgress', JSON.stringify({
+                currentPage: page,
+                timestamp: Date.now()
+            }));
+        }
+
+        // التحميل الأولي
+        window.onload = () => {
+            const savedProgress = localStorage.getItem('quranProgress');
+            if (savedProgress) {
+                currentPage = JSON.parse(savedProgress).currentPage;
+            }
+            displayPage(currentPage);
+        };
+
+        // حماية من الخروج المبكر
+        window.addEventListener('beforeunload', (e) => {
+            if (!validateTime()) {
+                e.preventDefault();
+                e.returnValue = 'هل تريد المغادرة قبل إتمام الوقت المطلوب؟';
+            }
+        });
+    </script>
+</body>
+  </html> 
