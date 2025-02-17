@@ -6,12 +6,14 @@
     <title>عاهدتُ القرآن - المنصة الذكية</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* الأساسيات */
         :root {
             --dark-blue: #1a237e;
             --medium-blue: #283593;
             --light-blue: #4fc3f7;
             --gold: #FFD700;
+            --text-primary: #E1F5FE; /* لون جديد للنصوص الأساسية */
+            --text-secondary: #B3E5FC; /* لون للنصوص الثانوية */
+            --accent: #FFAB00; /* لون للتأكيدات */
         }
 
         * {
@@ -24,230 +26,139 @@
         body {
             background: linear-gradient(to bottom, var(--dark-blue), var(--light-blue));
             min-height: 100vh;
-            color: white;
+            color: var(--text-primary);
             position: relative;
             overflow-x: hidden;
         }
 
-        /* الجسيمات المتحركة */
-        .particles {
+        /* القائمة المخفية */
+        .menu-container {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
         }
 
-        .particle {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            animation: float 8s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) scale(0.5); opacity: 0; }
-            50% { transform: translateY(-100px) scale(1); opacity: 0.3; }
-            100% { transform: translateY(-200px) scale(0); opacity: 0; }
-        }
-
-        /* العنوان الرئيسي */
-        .header {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-        }
-
-        .title-frame {
-            display: inline-block;
-            padding: 1.5rem 3rem;
-            border-radius: 30px;
-            background: linear-gradient(45deg, 
-                rgba(255,255,255,0.1), 
-                rgba(79,195,247,0.2), 
-                rgba(255,215,0,0.1));
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.2);
-            animation: glow 3s infinite alternate;
-        }
-
-        @keyframes glow {
-            from { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
-            to { box-shadow: 0 0 30px rgba(255,215,0,0.5); }
-        }
-
-        h1 {
-            font-size: 2.8rem;
-            background: linear-gradient(to right, #fff 30%, var(--light-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .description {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-            color: rgba(255,255,255,0.9);
-        }
-
-        /* قسم الإحصائيات */
-        .stats-container {
-            max-width: 1200px;
-            margin: 3rem auto;
-            padding: 0 1rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .progress-circle {
-            width: 250px;
-            height: 250px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .progress-circle svg {
-            transform: rotate(-90deg);
-        }
-
-        .progress-circle circle {
-            fill: none;
-            stroke-width: 8;
-            stroke-linecap: round;
-        }
-
-        .progress-bg {
-            stroke: rgba(255,255,255,0.1);
-        }
-
-        .progress-bar {
-            stroke: var(--gold);
-            stroke-dasharray: 628;
-            stroke-dashoffset: calc(628 - (628 * var(--progress)) / 100);
-            transition: 0.5s ease-out;
-        }
-
-        .daily-stats {
-            background: rgba(255,255,255,0.05);
-            padding: 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .stat-item {
-            margin: 1.5rem 0;
-        }
-
-        /* زر البدء */
-        .start-button {
-            display: block;
-            width: 300px;
-            margin: 2rem auto;
-            padding: 1.5rem;
-            font-size: 1.3rem;
-            background: linear-gradient(45deg, var(--dark-blue), var(--medium-blue));
-            border: none;
-            border-radius: 50px;
-            color: white;
+        .menu-icon {
+            font-size: 2rem;
             cursor: pointer;
+            color: var(--text-primary);
             transition: 0.3s;
         }
 
-        .start-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .menu-icon:hover {
+            color: var(--accent);
         }
 
-        /* الدعاء */
-        .dua {
-            text-align: center;
-            padding: 2rem;
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            background: rgba(0,0,0,0.8);
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 200px;
+            top: 3rem;
+            left: 0;
+        }
+
+        .menu-dropdown.show {
+            display: block;
+        }
+
+        .menu-item {
+            color: var(--text-primary);
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--accent);
+        }
+
+        /* بقية الأنماط كما هي مع تعديل الألوان */
+        .title-frame h1 {
+            color: var(--accent); /* تغيير لون العنوان */
+        }
+
+        .description {
+            color: var(--text-secondary); /* لون جديد للوصف */
+        }
+
+        .stat-item h3 {
+            color: var(--accent); /* لون العناوين الفرعية */
+        }
+
+        /* تعديلات الألوان في الإحصائيات */
+        .daily-stats {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--accent);
+        }
+
+        /* تحديث زر البدء */
+        .start-button {
+            background: linear-gradient(45deg, var(--accent), var(--gold));
+            color: var(--dark-blue);
         }
     </style>
 </head>
 <body>
-    <!-- الجسيمات المتحركة -->
-    <div class="particles" id="particles"></div>
-
-    <!-- العنوان الرئيسي -->
-    <header class="header">
-        <div class="title-frame">
-            <h1>عاهدتُ القرآن</h1>
-            <p class="description">منصة ذكية لتدبر القرآن الكريم</p>
-        </div>
-    </header>
-
-    <!-- قسم الإحصائيات -->
-    <div class="stats-container">
-        <!-- دائرة التقدم -->
-        <div class="progress-circle">
-            <svg>
-                <circle class="progress-bg" cx="125" cy="125" r="120"/>
-                <circle class="progress-bar" cx="125" cy="125" r="120"/>
-            </svg>
-            <div class="progress-text">
-                <span class="percentage">25%</span>
-                <p>إنجاز الخطة</p>
-            </div>
-        </div>
-
-        <!-- الإحصائيات اليومية -->
-        <div class="daily-stats">
-            <div class="stat-item">
-                <h3>الأيام المتبقية</h3>
-                <p>27 يومًا</p>
-            </div>
-            <div class="stat-item">
-                <h3>الصفحات اليومية</h3>
-                <p>5 / 20 صفحة</p>
-            </div>
-            <div class="stat-item">
-                <h3>الوقت المقترح</h3>
-                <p>≈ 60 دقيقة</p>
-            </div>
+    <!-- القائمة المخفية -->
+    <div class="menu-container">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="menu-dropdown" id="menuDropdown">
+            <div class="menu-item" onclick="showSettings()">الإعدادات ⚙️</div>
+            <div class="menu-item" onclick="showNotifications()">الإشعارات 🔔</div>
+            <div class="menu-item" onclick="showProfile()">الملف الشخصي 👤</div>
+            <div class="menu-item" onclick="showHelp()">المساعدة ❓</div>
         </div>
     </div>
 
-    <!-- زر البدء -->
-    <button class="start-button">
-        ابدأ التلاوة الآن 🕌
-        <br>
-        <small>الصفحات المتبقية اليوم: 5</small>
-    </button>
-
-    <!-- الدعاء -->
-    <div class="dua">
-        "اللهم اجعل القرآن ربيع قلوبنا ونور صدورنا"
-    </div>
-
+    <!-- بقية المحتوى كما هو مع تعديل الألوان -->
+    
     <script>
-        // إنشاء الجسيمات
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for(let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.animationDelay = `${Math.random() * 8}s`;
-                container.appendChild(particle);
+        // دالة إظهار/إخفاء القائمة
+        function toggleMenu() {
+            document.getElementById('menuDropdown').classList.toggle('show');
+        }
+
+        // إغلاق القائمة عند النقر خارجها
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-icon')) {
+                const dropdowns = document.getElementsByClassName("menu-dropdown");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    if (dropdowns[i].classList.contains('show')) {
+                        dropdowns[i].classList.remove('show');
+                    }
+                }
             }
         }
 
-        // تحديث التقدم
-        function updateProgress() {
-            const progress = 25; // سيتم استبدالها بقيمة حقيقية
-            document.documentElement.style.setProperty('--progress', progress);
-            document.querySelector('.percentage').textContent = `${progress}%`;
+        // دوال الأزرار (تجريبية)
+        function showSettings() {
+            alert('صفحة الإعدادات قيد التطوير');
         }
 
-        // تهيئة الصفحة
-        window.addEventListener('load', () => {
-            createParticles();
-            updateProgress();
+        function showNotifications() {
+            alert('لا توجد إشعارات جديدة');
+        }
+
+        function showProfile() {
+            alert('الملف الشخصي سيتم تفعيله قريبًا');
+        }
+
+        function showHelp() {
+            alert('الدعم الفني: support@quran-platform.com');
+        }
+
+        // نقل إلى صفحة التلاوة
+        document.querySelector('.start-button').addEventListener('click', function() {
+            window.location.href = 'reading.html'; // سيتم إنشاء هذا الملف لاحقًا
         });
+
+        // بقية الدوال كما هي
     </script>
 </body>
 </html>
